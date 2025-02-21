@@ -36,9 +36,9 @@
                         <a class="nav-link" href="{{ route('home') }}">🏠 Trang chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('cart.index') }}">
-                            🛒 Giỏ hàng <span class="badge bg-danger">{{ session('cart') ? count(session('cart')) : 0 }}</span>
-                        </a>
+                        <a href="{{ route('cart.index') }}" class="btn btn-dark shadow fw-bold px-4 py-2">
+                            🛍 Giỏ Hàng <span id="cart-count" class="badge bg-danger">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+                        </a>                        
                     </li>
 
                     @if(Auth::check())

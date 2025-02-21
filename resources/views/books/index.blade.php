@@ -6,7 +6,6 @@
 <div class="container mt-4">
     <h2 class="fw-bold text-center text-primary">📚 Danh Sách Sách</h2>
 
-    <!-- Chỉ Admin mới thấy nút Thêm Sách -->
     @if(auth()->check() && auth()->user()->role === 'admin')
         <div class="text-end mb-3">
             <a href="{{ route('books.create') }}" class="btn btn-success shadow">
@@ -32,10 +31,8 @@
                             <div class="mt-auto">
                                 <div class="d-flex justify-content-between">
                                     <a href="{{ route('books.show', $book->id) }}" class="btn btn-primary">
-                                        👁 Xem
-                                    </a>
-                                    
-                                    <!-- Chỉ Admin mới thấy nút Sửa và Xóa -->
+                                        👁 Xem chi tiết sách
+                                    </a>                                    
                                     @if(auth()->check() && auth()->user()->role === 'admin')
                                         <a href="{{ route('books.edit', $book->id) }}" class="btn btn-warning">
                                             ✏️ Sửa
@@ -48,13 +45,9 @@
                                     @endif
                                 </div>
 
-                                <!-- Nút thêm vào giỏ hàng -->
-                                <form action="{{ route('cart.add', $book->id) }}" method="POST" class="mt-3">
-                                    @csrf
-                                    <button type="submit" class="btn btn-outline-primary w-100 fw-bold">
-                                        🛒 Thêm vào giỏ hàng
-                                    </button>
-                                </form>
+                                <button class="btn btn-outline-primary w-100 fw-bold add-to-cart" data-id="{{ $book->id }}">
+                                    🛒 Thêm vào giỏ hàng
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -64,11 +57,56 @@
 
         <div class="text-center mt-4">
             <a href="{{ route('cart.index') }}" class="btn btn-dark shadow fw-bold px-4 py-2">
-                🛍 Xem Giỏ Hàng
+                🛍 Xem Giỏ Hàng <span id="cart-count" class="badge bg-danger ms-2">{{ session('cart') ? count(session('cart')) : 0 }}</span>
             </a>
         </div>
     @else
         <p class="text-center text-muted mt-4">📖 Chưa có sách nào trong cửa hàng.</p>
     @endif
 </div>
+
+<!-- Thông báo giỏ hàng (Toast) - Đặt ngoài container -->
+<div id="cart-toast" class="toast align-items-center text-white bg-success border-0 position-fixed top-0 end-0 m-3 p-3 shadow"
+     role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1050;">
+    <div class="d-flex">
+        <div class="toast-body" id="cart-message"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const cartButtons = document.querySelectorAll(".add-to-cart");
+
+    cartButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            let bookId = this.getAttribute("data-id");
+
+            fetch("{{ route('cart.add', '') }}/" + bookId, {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hiển thị Toast thông báo
+                    let cartToastEl = document.getElementById("cart-toast");
+                    let cartToast = new bootstrap.Toast(cartToastEl);
+                    document.getElementById("cart-message").textContent = data.message;
+                    cartToast.show();
+
+                    // Cập nhật số lượng giỏ hàng
+                    document.getElementById("cart-count").textContent = data.cart_count;
+                }
+            })
+            .catch(error => console.error("Lỗi:", error));
+        });
+    });
+});
+</script>
+
 @endsection

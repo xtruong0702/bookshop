@@ -1,1 +1,29 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
+#cart-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050; /* Đảm bảo nằm trên các phần tử khác */
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    background-color: rgba(40, 167, 69, 0.95); /* Màu xanh lá trong suốt */
+    color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+/* Hiệu ứng xuất hiện */
+#cart-message.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Hiệu ứng ẩn đi */
+#cart-message.hide {
+    opacity: 0;
+    transform: translateY(-10px);
+}
