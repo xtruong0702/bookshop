@@ -15,26 +15,22 @@ class CartController extends Controller
     }
 
     // Thêm sách vào giỏ hàng
-    public function add(Request $request, $bookId)
-    {
-        $book = Book::findOrFail($bookId);
-        $cart = session()->get('cart', []);
+    public function add(Request $request, Book $book)
+{
+    $cart = session()->get('cart', []);
 
-        if (isset($cart[$bookId])) {
-            $cart[$bookId]['quantity'] += 1;
-        } else {
-            $cart[$bookId] = [
-                'title' => $book->title,
-                'author' => $book->author,
-                'price' => $book->price,
-                'image' => $book->image,
-                'quantity' => 1
-            ];
-        }
+    $cart[$book->id] = [
+        'title' => $book->title,
+        'author' => $book->author,
+        'price' => $book->price,
+        'quantity' => ($cart[$book->id]['quantity'] ?? 0) + 1,
+        'image' => $book->image, // Kiểm tra giá trị này
+    ];
 
-        session()->put('cart', $cart);
-        return redirect()->route('cart.index')->with('success', "Đã thêm '{$book->title}' vào giỏ hàng!");
-    }
+    session()->put('cart', $cart);
+    return redirect()->route('cart.index')->with('success', 'Đã thêm vào giỏ hàng!');
+}
+
 
     // Cập nhật số lượng sách trong giỏ hàng
     public function update(Request $request, $bookId)

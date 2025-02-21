@@ -7,56 +7,66 @@
     <h2 class="fw-bold text-center text-primary">🛒 Giỏ Hàng</h2>
 
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success text-center">{{ session('success') }}</div>
     @endif
 
     @if(empty($cart))
-        <p class="text-center text-muted mt-4">🛍 Giỏ hàng trống.</p>
+        <div class="text-center mt-4">
+            <p class="text-muted fs-5">🛍 Giỏ hàng của bạn đang trống.</p>
+            <a href="{{ route('home') }}" class="btn btn-outline-primary">📚 Tiếp tục mua sắm</a>
+        </div>
     @else
-        <table class="table table-bordered mt-4">
-            <thead class="table-dark">
-                <tr>
-                    <th>Hình Ảnh</th>
-                    <th>Tên Sách</th>
-                    <th>Tác Giả</th>
-                    <th>Giá</th>
-                    <th>Số Lượng</th>
-                    <th>Tổng</th>
-                    <th>Hành Động</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($cart as $id => $item)
+        <div class="table-responsive mt-4">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-dark">
                     <tr>
-                        <td><img src="{{ asset($item['image'] ?? 'images/default-book.jpg') }}" width="60" height="80"></td>
-                        <td>{{ $item['title'] }}</td>
-                        <td>{{ $item['author'] }}</td>
-                        <td>{{ number_format($item['price'], 0, ',', '.') }} VNĐ</td>
-                        <td>
-                            <form action="{{ route('cart.update', $id) }}" method="POST">
-                                @csrf
-                                <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" class="form-control d-inline-block" style="width: 60px;">
-                                <button type="submit" class="btn btn-sm btn-primary">✔</button>
-                            </form>
-                        </td>
-                        <td>{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }} VNĐ</td>
-                        <td>
-                            <form action="{{ route('cart.remove', $id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-danger">🗑 Xóa</button>
-                            </form>
-                        </td>
+                        <th>Hình Ảnh</th>
+                        <th>Tên Sách</th>
+                        <th>Tác Giả</th>
+                        <th>Giá</th>
+                        <th>Số Lượng</th>
+                        <th>Tổng</th>
+                        <th>Hành Động</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach($cart as $id => $item)
+                        <tr>
+                            <td>
+                                <img src="{{ asset($item['image'] ? 'storage/' . $item['image'] : 'images/default-book.jpg') }}" 
+                                     alt="{{ $item['title'] }}" class="img-thumbnail" width="60">
+                            </td>
+                            <td class="fw-semibold">{{ $item['title'] }}</td>
+                            <td class="text-muted">{{ $item['author'] }}</td>
+                            <td class="text-danger fw-bold">{{ number_format($item['price'], 0, ',', '.') }} VNĐ</td>
+                            <td>
+                                <form action="{{ route('cart.update', $id) }}" method="POST" class="d-flex justify-content-center align-items-center">
+                                    @csrf
+                                    <input type="number" name="quantity" value="{{ $item['quantity'] }}" min="1" 
+                                           class="form-control text-center me-2" style="width: 60px;">
+                                    <button type="submit" class="btn btn-sm btn-primary">✔</button>
+                                </form>
+                            </td>
+                            <td class="text-success fw-bold">{{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }} VNĐ</td>
+                            <td>
+                                <form action="{{ route('cart.remove', $id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-danger">🗑 Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-        <div class="text-end">
-            <form action="{{ route('cart.clear') }}" method="POST" class="d-inline">
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <a href="{{ route('home') }}" class="btn btn-secondary">🏠 Quay lại trang chủ</a>
+            <form action="{{ route('cart.clear') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-warning">🗑 Xóa toàn bộ</button>
             </form>
-            <a href="{{ route('checkout') }}" class="btn btn-success">💳 Thanh Toán</a>
+            <a href="{{ route('checkout') }}" class="btn btn-success btn-lg">💳 Thanh Toán</a>
         </div>
     @endif
 </div>
