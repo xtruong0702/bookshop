@@ -57,7 +57,7 @@
 
         <div class="text-center mt-4">
             <a href="{{ route('cart.index') }}" class="btn btn-dark shadow fw-bold px-4 py-2">
-                🛍 Xem Giỏ Hàng <span id="cart-count" class="badge bg-danger ms-2">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+                🛍 Xem Giỏ Hàng <span id="cart-count" class="badge bg-danger ms-2"></span>
             </a>
         </div>
     @else
