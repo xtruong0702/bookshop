@@ -26,4 +26,6 @@
 #cart-message.hide {
     opacity: 0;
     transform: translateY(-10px);
+
+    
 }

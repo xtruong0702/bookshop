@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container mt-4">
-    <h2 class="fw-bold text-center text-primary">📚 Danh Sách Sách</h2>
+    <h2 class="fw-bold text-center text-primary">📚 Danh Sách Sản Phẩm</h2>
 
     @if(auth()->check() && auth()->user()->role === 'admin')
         <div class="text-end mb-3">
