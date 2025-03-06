@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 class BookController extends Controller
 {
-
     public function dashboard()
-{
-    $user = Auth::user(); // Lấy thông tin user đăng nhập
-    return view('dashboard', compact('user'));
-}
+    {
+        $user = Auth::user();
+        return view('dashboard', compact('user'));
+    }
+
     // Hiển thị danh sách sách
     public function index()
     {
@@ -28,28 +29,25 @@ class BookController extends Controller
 
     // Xử lý thêm sách mới
     public function store(Request $request)
-{
-    $request->validate([
-        'title' => 'required',
-        'author' => 'required',
-        'price' => 'required|numeric',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra file ảnh
-    ]);
+    {
+        $request->validate([
+            'title' => 'required',
+            'author' => 'required',
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-    $imagePath = null;
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('books', 'public');
+        $imagePath = $request->hasFile('image') ? $request->file('image')->store('books', 'public') : null;
+
+        Book::create([
+            'title' => $request->title,
+            'author' => $request->author,
+            'price' => $request->price,
+            'image' => $imagePath,
+        ]);
+
+        return redirect()->route('books.index')->with('success', 'Thêm sách thành công!');
     }
-
-    Book::create([
-        'title' => $request->title,
-        'author' => $request->author,
-        'price' => $request->price,
-        'image' => $imagePath,
-    ]);
-
-    return redirect()->route('books.index')->with('success', 'Thêm sách thành công!');
-}
 
     // Hiển thị chi tiết sách
     public function show(Book $book)
@@ -63,8 +61,6 @@ class BookController extends Controller
         return view('books.edit', compact('book'));
     }
 
-    
-
     // Cập nhật thông tin sách
     public function update(Request $request, Book $book)
     {
@@ -74,21 +70,20 @@ class BookController extends Controller
             'price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
+
         if ($request->hasFile('image')) {
-            // Lưu ảnh mới
-            $imagePath = $request->file('image')->store('books', 'public');
-            $book->image = $imagePath;
+            $book->image = $request->file('image')->store('books', 'public');
         }
-    
-        $book->update([
-            'title' => $request->title,
-            'author' => $request->author,
-            'price' => $request->price,
-            'image' => $book->image,
-        ]);
-    
+
+        $book->update($request->only(['title', 'author', 'price', 'image']));
+
         return redirect()->route('books.index')->with('success', 'Cập nhật sách thành công!');
     }
-    
+
+    // Xóa sách
+    public function destroy(Book $book)
+    {
+        $book->delete();
+        return redirect()->route('books.index')->with('success', 'Xóa sách thành công!');
+    }
 }
