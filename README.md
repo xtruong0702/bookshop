@@ -64,4 +64,7 @@ php artisan serve
 
 ## 7. Liên Hệ
 - **GitHub:** [xtruong0702](https://github.com/xtruong0702)
+![image](https://github.com/user-attachments/assets/24c83da7-7b1c-4afb-b190-d171c6dc6a5d)
+
+- 
 
