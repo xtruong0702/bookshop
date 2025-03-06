@@ -3,6 +3,9 @@
 ## 1. Giới Thiệu
 Book Shop là một trang web bán sách trực tuyến được xây dựng bằng Laravel và Bootstrap. Mục đích của dự án là cung cấp một nền tảng mà người dùng có thể mua sách một cách dễ dàng và thuận tiện.
 
+![image](https://github.com/user-attachments/assets/24c83da7-7b1c-4afb-b190-d171c6dc6a5d)
+
+
 ## 2. Tính Năng
 ### 2.1. Dành cho khách hàng
 - Xem danh sách sản phảm
@@ -64,7 +67,4 @@ php artisan serve
 
 ## 7. Liên Hệ
 - **GitHub:** [xtruong0702](https://github.com/xtruong0702)
-![image](https://github.com/user-attachments/assets/24c83da7-7b1c-4afb-b190-d171c6dc6a5d)
-
-- 
 
